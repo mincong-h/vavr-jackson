@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableBiMap;
 import io.vavr.control.Option;
 import org.junit.Assert;
 import org.junit.Test;
@@ -110,5 +111,16 @@ public class OptionTest extends BaseTest {
         Assert.assertEquals("{\"f\":[\"defined\",{\"card\":{\"type\":\"hello\"}}]}", javaUtilValue);
         A restored = mapper.readValue(javaUtilValue, A.class);
         Assert.assertEquals("hello", restored.f.get().type);
+    }
+
+    @Test
+    public void testIteratorSerialization() throws IOException {
+        Option<?> value = Option.of(ImmutableBiMap.of("k", "v"));
+
+        String json1 = mapper().writeValueAsString(value);
+        Assert.assertEquals("{\"k\":\"v\"}", json1);
+
+        String json2 = mapper(optSettings).writeValueAsString(value);
+        Assert.assertEquals("[\"defined\",{\"k\":\"v\"}]", json2);
     }
 }

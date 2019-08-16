@@ -23,6 +23,7 @@ dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind:${fasterxmlVersion}"
     testCompile "junit:junit:${junitVersion}"
     testCompile "javax.xml.bind:jaxb-api:${jaxbVersion}"
+    testCompile "com.google.guava:guava:${guavaVersion}"
     testCompile "com.squareup:javapoet:${javapoetVersion}"
     testCompile "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${fasterxmlVersion}"
     testCompile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${fasterxmlVersion}"
