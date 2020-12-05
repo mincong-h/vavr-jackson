@@ -2,6 +2,7 @@ package io.vavr.jackson.issues;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.vavr.control.Either;
 import io.vavr.jackson.datatype.BaseTest;
 import io.vavr.jackson.datatype.VavrModule;
@@ -9,25 +10,28 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class Issue174Test extends BaseTest {
+class Issue174Test {
     @Test
-    void name() throws Exception {
+    void eitherLeft() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new VavrModule());
-
         Cat cat = new Cat();
         cat.name = "Bianca";
         Either<Cat, Dog> either = Either.left(cat);
 
-        assertEquals("[\"left\",{\"name\":\"Bianca\"}]", objectMapper.writeValueAsString(either));
+        String json = objectMapper.writeValueAsString(either);
+        assertEquals("[\"left\",{\"name\":\"Bianca\"}]", json);
+
+        Either<Cat, Dog> restored = objectMapper.readValue(json, new TypeReference<Either<Cat, Dog>>() {});
+        assertEquals("Bianca", restored.getLeft().name);
     }
 
-    class Cat {
+    static class Cat {
         @JsonProperty("name")
         String name;
     }
 
-    class Dog {
+    static class Dog {
         String name;
     }
 }
